@@ -6,15 +6,24 @@ The Smart Expense & Budget Management System is a Python desktop
 application designed to help individuals, students and small business
 owners record, manage and analyse their income and expenses.
 
-## Problem Statement
+## Project Problem
 
-Individuals and small businesses often record their expenses
-inconsistently and may find it difficult to quickly understand where
-their money is going.
+Many individuals, students, and small business owners do not have a
+simple and organized way to record and monitor their income and expenses.
 
-This project aims to provide a simple desktop application for recording
-transactions, organizing expenses into categories and generating useful
-financial summaries.
+Financial transactions are often recorded inconsistently or kept in
+different places such as notebooks, phone notes, spreadsheets, or
+messages. This makes it difficult to know how much money is being spent,
+where the money is going, and whether spending is within a planned budget.
+
+As a result, users may struggle to identify unnecessary spending,
+calculate their monthly financial position, and make informed budgeting
+decisions.
+
+The Smart Expense & Budget Management System will provide a user-friendly
+Python desktop application that allows users to record, categorize,
+search, and analyse their financial transactions.
+
 
 ## Project Objectives
 
@@ -34,6 +43,63 @@ financial summaries.
 - Students
 - Individuals
 - Small business owners
+
+## User Stories
+
+### Transaction Management
+
+- As a user, I want to record an income transaction so that I can keep
+  track of money coming into my account.
+
+- As a user, I want to record an expense so that I can keep track of
+  where my money is going.
+
+- As a user, I want to edit a transaction so that I can correct
+  information I entered incorrectly.
+
+- As a user, I want to delete a transaction so that I can remove
+  incorrect or unwanted records.
+
+### Categories
+
+- As a user, I want to categorize transactions so that I can understand
+  how my money is being spent.
+
+- As a user, I want categories such as Food, Transport, Bills, Business,
+  Salary and Other.
+
+### Search and Filtering
+
+- As a user, I want to search for transactions so that I can quickly
+  find a specific financial record.
+
+- As a user, I want to filter transactions by category, date or type
+  so that I can analyze specific records.
+
+### Reports and Budgeting
+
+- As a user, I want to see my monthly income and expenses so that I can
+  understand my financial position.
+
+- As a user, I want to see spending by category so that I can identify
+  where most of my money goes.
+
+- As a user, I want to compare my budget with my actual spending so that
+  I can control my expenses.
+
+### Export and Dashboard
+
+- As a user, I want to export my transactions to CSV so that I can use
+  my financial data in other applications.
+
+- As a user, I want to see a visual dashboard so that I can understand
+  my financial information quickly.
+
+### Validation
+
+- As a user, I want the application to show clear error messages when
+  I enter invalid or incomplete information.
+
 
 ## Main Features
 
