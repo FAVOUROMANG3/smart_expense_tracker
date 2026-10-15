@@ -6,7 +6,7 @@ from src.database.database import Database
 from src.models.transaction import Transaction
 
 from src.reporting import export_transactions, export_monthly_report
-
+from src.dashboard import DashboardWindow
 
 CATEGORIES = [
     "Food", "Transport", "Bills",
@@ -157,6 +157,16 @@ class ExpenseApp(ctk.CTk):
             command=self.reset_filters,
             fg_color="gray", hover_color="dim gray", width=80
         ).grid(row=0, column=4, padx=8, pady=10)
+
+        
+        ctk.CTkButton(
+            self,
+            text="Open Financial Dashboard",
+            command=self.open_dashboard
+        ).grid(
+            row=7, column=0,
+            padx=20, pady=(0, 15), sticky="ew"
+        )
 
 
         # Results table
@@ -375,6 +385,11 @@ class ExpenseApp(ctk.CTk):
                 )
         except Exception as error:
             messagebox.showerror("Delete Error", str(error))
+
+    
+    def open_dashboard(self):
+        DashboardWindow(self, self.database)
+
 
     def clear_form(self):
         self.selected_id = None

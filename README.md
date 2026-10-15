@@ -178,3 +178,10 @@ This screenshot shows the search field and filters for transaction type and cate
 This screenshot shows the transaction management interface.
 
 ![Validation](docs/screenshots/validation.png)
+
+## Financial Dashboard and Charts
+
+The application includes a visual dashboard for reviewing monthly financial performance.
+
+### Monthly Financial Dashboard
+![Financial dashboard](docs/screenshots/financial-dashboard.png)
