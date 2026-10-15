@@ -157,3 +157,11 @@ The application will be tested for:
 - Searching and filtering
 - Monthly calculations
 - CSV export
+
+## CustomTkinter GUI Screenshots
+
+### Transaction Entry Form
+![CustomTkinter transaction form](docs/screenshots/customtkinter-form.png)
+
+### Saved Transactions
+![Saved transactions table](docs/screenshots/saved-transactions.png)
