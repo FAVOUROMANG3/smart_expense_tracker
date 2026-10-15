@@ -165,3 +165,16 @@ The application will be tested for:
 
 ### Saved Transactions
 ![Saved transactions table](docs/screenshots/saved-transactions.png)
+
+
+## Latest GUI Screenshots
+
+### 1. Search and Filters
+This screenshot shows the search field and filters for transaction type and category.
+
+![Search and Filters](docs/screenshots/search-and-filters.png)
+
+### 2. Edit, Delete and Validation
+This screenshot shows the transaction management interface.
+
+![Validation](docs/screenshots/validation.png)
