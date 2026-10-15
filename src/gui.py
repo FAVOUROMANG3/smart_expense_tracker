@@ -1,10 +1,11 @@
-
 import customtkinter as ctk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 from datetime import date
 
 from src.database.database import Database
 from src.models.transaction import Transaction
+
+from src.reporting import export_transactions, export_monthly_report
 
 
 CATEGORIES = [
@@ -157,6 +158,7 @@ class ExpenseApp(ctk.CTk):
             fg_color="gray", hover_color="dim gray", width=80
         ).grid(row=0, column=4, padx=8, pady=10)
 
+
         # Results table
         table_frame = ctk.CTkFrame(self)
         table_frame.grid(row=3, column=0, padx=20, pady=(5, 18),
@@ -176,6 +178,18 @@ class ExpenseApp(ctk.CTk):
             table_frame, columns=columns,
             show="headings", selectmode="browse"
         )
+
+        ctk.CTkButton(
+            self,
+            text="Monthly Summary & Budgets",
+            command=self.open_reports
+        ).grid(row=5, column=0, padx=20, pady=(0, 8), sticky="ew")
+
+        ctk.CTkButton(
+            self,
+            text="Export All Transactions to CSV",
+            command=self.export_all_transactions
+        ).grid(row=6, column=0, padx=20, pady=(0, 15), sticky="ew")
 
         headings = {
             "id": ("ID", 50),
@@ -380,6 +394,221 @@ class ExpenseApp(ctk.CTk):
         self.filter_type_var.set("All")
         self.filter_category_var.set("All")
         self.load_transactions()
+
+    
+    def open_reports(self):
+        window = ctk.CTkToplevel(self)
+        window.title("Monthly Summary & Budget Reports")
+        window.geometry("760x700")
+        window.transient(self)
+
+        month_var = ctk.StringVar(value=date.today().strftime("%Y-%m"))
+        category_var = ctk.StringVar(value="Food")
+        budget_var = ctk.StringVar()
+
+        ctk.CTkLabel(
+            window,
+            text="Monthly Financial Report",
+            font=ctk.CTkFont(size=23, weight="bold")
+        ).pack(padx=20, pady=(20, 10))
+
+        controls = ctk.CTkFrame(window)
+        controls.pack(fill="x", padx=20, pady=10)
+
+        ctk.CTkLabel(
+            controls, text="Month (YYYY-MM)"
+        ).grid(row=0, column=0, padx=10, pady=10)
+
+        ctk.CTkEntry(
+            controls, textvariable=month_var, width=150
+        ).grid(row=0, column=1, padx=10, pady=10)
+
+        summary_text = ctk.CTkTextbox(
+            window, height=170, width=680
+        )
+        summary_text.pack(fill="x", padx=20, pady=10)
+
+        budget_frame = ctk.CTkFrame(window)
+        budget_frame.pack(fill="x", padx=20, pady=10)
+
+        ctk.CTkLabel(
+            budget_frame, text="Category"
+        ).grid(row=0, column=0, padx=10, pady=10)
+
+        ctk.CTkComboBox(
+            budget_frame,
+            variable=category_var,
+            values=CATEGORIES,
+            state="readonly",
+            width=150
+        ).grid(row=0, column=1, padx=10, pady=10)
+
+        ctk.CTkLabel(
+            budget_frame, text="Monthly budget"
+        ).grid(row=0, column=2, padx=10, pady=10)
+
+        ctk.CTkEntry(
+            budget_frame,
+            textvariable=budget_var,
+            placeholder_text="Enter amount",
+            width=130
+        ).grid(row=0, column=3, padx=10, pady=10)
+
+        budget_text = ctk.CTkTextbox(
+            window, height=200, width=680
+        )
+        budget_text.pack(fill="both", expand=True, padx=20, pady=10)
+
+        def refresh_report():
+            month = month_var.get().strip()
+
+            try:
+                # Validate YYYY-MM before querying the database.
+                from datetime import datetime
+                datetime.strptime(month, "%Y-%m")
+
+                summary = self.database.get_monthly_summary(month)
+                categories = self.database.get_category_summary(month)
+                comparisons = self.database.get_budget_comparison(month)
+
+                summary_text.configure(state="normal")
+                summary_text.delete("1.0", "end")
+                summary_text.insert(
+                    "end",
+                    f"MONTH: {month}\n"
+                    f"Total income:   {summary['total_income']:,.2f}\n"
+                    f"Total expenses: {summary['total_expenses']:,.2f}\n"
+                    f"Balance:        {summary['balance']:,.2f}\n\n"
+                    "EXPENSES BY CATEGORY\n"
+                )
+
+                if categories:
+                    for item in categories:
+                        summary_text.insert(
+                            "end",
+                            f"  {item['category']}: {item['total']:,.2f}\n"
+                        )
+                else:
+                    summary_text.insert("end", "  No expenses recorded.\n")
+
+                summary_text.configure(state="disabled")
+
+                budget_text.configure(state="normal")
+                budget_text.delete("1.0", "end")
+                budget_text.insert("end", "BUDGET VS ACTUAL\n")
+
+                if comparisons:
+                    for item in comparisons:
+                        budget_text.insert(
+                            "end",
+                            f"{item['category']}: "
+                            f"Budget {item['budget']:,.2f} | "
+                            f"Actual {item['actual']:,.2f} | "
+                            f"Remaining {item['remaining']:,.2f} | "
+                            f"{item['status']}\n"
+                        )
+                else:
+                    budget_text.insert(
+                        "end",
+                        "No budgets set for this month yet.\n"
+                    )
+
+                budget_text.configure(state="disabled")
+
+            except ValueError:
+                messagebox.showerror(
+                    "Invalid Month",
+                    "Enter a valid month in YYYY-MM format, e.g. 2026-10.",
+                    parent=window
+                )
+            except Exception as error:
+                messagebox.showerror(
+                    "Report Error", str(error), parent=window
+                )
+
+        def save_budget():
+            try:
+                self.database.set_budget(
+                    month_var.get().strip(),
+                    category_var.get(),
+                    budget_var.get()
+                )
+                refresh_report()
+                messagebox.showinfo(
+                    "Budget Saved", "Monthly budget saved successfully.",
+                    parent=window
+                )
+            except (ValueError, TypeError) as error:
+                messagebox.showerror(
+                    "Invalid Budget", str(error), parent=window
+                )
+            except Exception as error:
+                messagebox.showerror(
+                    "Budget Error", str(error), parent=window
+                )
+
+        def export_report():
+            month = month_var.get().strip()
+            filename = filedialog.asksaveasfilename(
+                parent=window,
+                title="Save Monthly Report",
+                defaultextension=".csv",
+                initialfile=f"monthly_report_{month}.csv",
+                filetypes=[("CSV files", "*.csv")]
+            )
+            if not filename:
+                return
+
+            try:
+                saved_path = export_monthly_report(
+                    self.database, month, filename
+                )
+                messagebox.showinfo(
+                    "Export Complete",
+                    f"Report saved to:\n{saved_path}",
+                    parent=window
+                )
+            except Exception as error:
+                messagebox.showerror(
+                    "Export Error", str(error), parent=window
+                )
+
+        ctk.CTkButton(
+            controls, text="View Summary",
+            command=refresh_report
+        ).grid(row=0, column=2, padx=10, pady=10)
+
+        ctk.CTkButton(
+            budget_frame, text="Save Budget",
+            command=save_budget
+        ).grid(row=0, column=4, padx=10, pady=10)
+
+        ctk.CTkButton(
+            window, text="Export Monthly Report (CSV)",
+            command=export_report
+        ).pack(pady=(0, 15))
+
+        refresh_report()
+
+    def export_all_transactions(self):
+        filename = filedialog.asksaveasfilename(
+            parent=self,
+            title="Export Transactions",
+            defaultextension=".csv",
+            initialfile="transactions.csv",
+            filetypes=[("CSV files", "*.csv")]
+        )
+        if not filename:
+            return
+
+        try:
+            saved_path = export_transactions(self.database, filename)
+            messagebox.showinfo(
+                "Export Complete",
+                f"Transactions exported to:\n{saved_path}"
+            )
+        except Exception as error:
+            messagebox.showerror("Export Error", str(error))
 
 
 if __name__ == "__main__":
