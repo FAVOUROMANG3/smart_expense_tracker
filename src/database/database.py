@@ -56,49 +56,36 @@ class Database:
             return cursor.lastrowid
 
     # SELECT: Get all transactions, with optional filters
-    def get_transactions(
-        self,
-        transaction_type: Optional[str] = None,
-        category: Optional[str] = None,
-        search: Optional[str] = None
-    ):
+    def get_transactions(self, transaction_type=None, category=None, search=None):
         query = "SELECT * FROM transactions WHERE 1=1"
         parameters = []
 
-        if transaction_type:
+        if transaction_type and transaction_type != "All":
             if transaction_type not in ("income", "expense"):
                 raise ValueError("Invalid transaction type.")
             query += " AND transaction_type = ?"
             parameters.append(transaction_type)
 
-        if category:
+        if category and category != "All":
             query += " AND category = ?"
             parameters.append(category)
 
-        if search:
-            query += " AND (category LIKE ? OR description LIKE ?)"
-            term = f"%{search}%"
+        if search and search.strip():
+            query += """
+                AND (category LIKE ? OR description LIKE ?)
+            """
+            term = f"%{search.strip()}%"
             parameters.extend([term, term])
 
         query += " ORDER BY transaction_date DESC, id DESC"
 
         with self.connect() as connection:
             rows = connection.execute(query, parameters).fetchall()
+            
             return [dict(row) for row in rows]
 
-    # SELECT: Get one transaction by its ID
-    def get_transaction(self, transaction_id: int):
-        with self.connect() as connection:
-            row = connection.execute(
-                "SELECT * FROM transactions WHERE id = ?",
-                (transaction_id,)
-            ).fetchone()
-            return dict(row) if row else None
-
     # UPDATE: Edit an existing transaction
-    def update_transaction(
-        self, transaction_id: int, transaction: Transaction
-    ) -> bool:
+    def update_transaction(self, transaction_id, transaction):
         with self.connect() as connection:
             cursor = connection.execute("""
                 UPDATE transactions
@@ -118,8 +105,7 @@ class Database:
             ))
             return cursor.rowcount > 0
 
-    # DELETE: Remove a transaction
-    def delete_transaction(self, transaction_id: int) -> bool:
+    def delete_transaction(self, transaction_id):
         with self.connect() as connection:
             cursor = connection.execute(
                 "DELETE FROM transactions WHERE id = ?",
