@@ -142,7 +142,7 @@ The application will include categories such as:
 
 ## Project Status
 
-Currently in the initial development stage.
+The Smart Expense & Budget Management System has been developed with core features for transaction management, SQLite database storage, monthly financial summaries, category analysis, budget-versus-actual calculations, CSV export, and a dashboard with charts. Testing has been performed on these features, with the reported results passing. Further documentation and final verification are ongoing.
 
 ## Testing
 
