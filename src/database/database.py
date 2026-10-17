@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from src.models.transaction import Transaction
-
+from contextlib import contextmanager
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "expenses.db"
@@ -17,11 +17,20 @@ class Database:
         self.create_table()
         self.create_budget_table()
 
+    @contextmanager
     def connect(self):
         connection = sqlite3.connect(self.db_path)
         connection.row_factory = sqlite3.Row
         connection.execute("PRAGMA foreign_keys = ON")
-        return connection
+        
+        try:
+            yield connection
+            connection.commit()
+        except Exception:
+            connection.rollback()
+            raise
+        finally:
+            connection.close() 
 
     # CREATE: Create the transactions table
     def create_table(self):
