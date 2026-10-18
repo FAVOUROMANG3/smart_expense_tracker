@@ -165,10 +165,10 @@ Further checks should cover adding and deleting transactions, searching and filt
 ## CustomTkinter GUI Screenshots
 
 ### Transaction Entry Form
-![CustomTkinter transaction form](docs/screenshots/customtkinter-form.png)
+![CustomTkinter transaction form](docs/screenshots/customtkinter_form.png)
 
 ### Saved Transactions
-![Saved transactions table](docs/screenshots/saved-transactions.png)
+![Saved transactions table](docs/screenshots/saved_transactions.png)
 
 
 ## Latest GUI Screenshots
@@ -176,7 +176,7 @@ Further checks should cover adding and deleting transactions, searching and filt
 ### 1. Search and Filters
 This screenshot shows the search field and filters for transaction type and category.
 
-![Search and Filters](docs/screenshots/search-and-filters.png)
+![Search and Filters](docs/screenshots/search_and_filters.png)
 
 ### 2. Edit, Delete and Validation
 This screenshot shows the transaction management interface.
@@ -188,7 +188,7 @@ This screenshot shows the transaction management interface.
 The application includes a visual dashboard for reviewing monthly financial performance.
 
 ### Monthly Financial Dashboard
-![Financial dashboard](docs/screenshots/financial-dashboard.png)
+![Financial dashboard](docs/screenshots/financial_dashboard.png)
 
 
 Installation and Setup
