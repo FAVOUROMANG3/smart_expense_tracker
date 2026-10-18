@@ -189,3 +189,41 @@ The application includes a visual dashboard for reviewing monthly financial perf
 
 ### Monthly Financial Dashboard
 ![Financial dashboard](docs/screenshots/financial-dashboard.png)
+
+
+Installation and Setup
+
+1. Clone the Repository
+
+git clone https://github.com/FAVOUROMANG3/smart_expense_tracker.git
+cd smart_expense_tracker
+
+2. Create a Virtual Environment
+
+python -m venv .venv
+
+3. Activate the Virtual Environment
+
+Windows:
+
+.venv\Scripts\activate
+
+4. Install Dependencies
+
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+5. Run the Application
+
+Run the application's entry-point Python file from the project root directory.
+
+Replace "main.py" below with the actual filename if your entry point has a different name.
+
+python main.py
+
+Troubleshooting
+
+- Ensure Python is installed and available from your terminal.
+- Activate the virtual environment before installing dependencies or running the application.
+- If a module is missing, check that it is listed in "requirements.txt".
+- If the application fails to start, review the error message in the terminal.
