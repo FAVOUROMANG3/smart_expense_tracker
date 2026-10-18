@@ -146,17 +146,21 @@ The Smart Expense & Budget Management System has been developed with core featur
 
 ## Testing
 
-The application will be tested for:
+The Smart Expense & Budget Management System was tested to check its main features and functionality.
 
-- Adding transactions
-- Editing transactions
-- Deleting transactions
-- Invalid amounts
-- Empty fields
-- Database persistence
-- Searching and filtering
-- Monthly calculations
-- CSV export
+Test Area| Result
+SQLite database storage and persistence| PASS
+Monthly totals calculation| PASS
+Category summaries| PASS
+Budget versus actual spending| PASS
+CSV export| PASS
+Dashboard and charts| PASS
+Editing transactions| PASS
+
+Additional Testing
+
+Further checks should cover adding and deleting transactions, searching and filtering records, invalid amounts, empty required fields, and database persistence after restarting the application.
+
 
 ## CustomTkinter GUI Screenshots
 
